@@ -2,19 +2,39 @@ package com.zandero.rest.test;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.zandero.rest.events.RestEventContext;
 import org.junit.AfterClass;
 import org.junit.Before;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Runs local instance of Jetty to power RestEasy REST interfaces
  * in order to test REST filtering and event triggering
+ *
+ * Rest are running on http://localhost:4444/rest/
  */
 public class BaseRestTest {
 
-	protected String ROOT_URL = "http://localhost:4444";
+	protected static final int PORT = 4444;
+	protected String ROOT_URL = "http://localhost:" + PORT;
+
+	/**
+	 * Variable holding last event if set
+	 */
+	private static String lastEvent;
+
+	/**
+	 * Variable holding last entity if set
+	 */
+	private static Serializable lastEntity;
+
+	/**
+	 * Variable holding last context if set
+	 */
+	private static RestEventContext lastContext;
 
 	private List<AbstractModule> testModules;
 
@@ -46,5 +66,35 @@ public class BaseRestTest {
 	public static void stopServer() throws Exception {
 
 		WebServer.stop();
+	}
+
+	public static void setEvent(String event, Serializable entity, RestEventContext context) {
+		lastEvent = event;
+		lastEntity = entity;
+		lastContext = context;
+	}
+
+	/**
+	 * @return last set event name
+	 */
+	public static String getEvent() {
+
+		return lastEvent;
+	}
+
+	/**
+	 * @return last set entity
+	 */
+	public static Serializable getEntity() {
+
+		return lastEntity;
+	}
+
+	/**
+	 * @return last set context
+	 */
+	public static RestEventContext getContext() {
+
+		return lastContext;
 	}
 }

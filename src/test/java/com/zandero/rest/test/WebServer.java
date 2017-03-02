@@ -52,7 +52,7 @@ public class WebServer {
 
 		// HTTP
 		ServerConnector connector = new ServerConnector(server);
-		connector.setPort(4444);
+		connector.setPort(BaseRestTest.PORT);
 		connector.setIdleTimeout(30L * DateTimeUtils.ONE_SECOND);
 
 		server.setConnectors(new Connector[]{connector});

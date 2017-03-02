@@ -113,38 +113,11 @@
             <version>1.0</version>
         </dependency>
 
-        <!-- internal dependencies -->
-        <dependency>
-            <groupId>com.codescore</groupId>
-            <artifactId>utils</artifactId>
-        </dependency>
-
-      <!--  &lt;!&ndash; Mustache templates &ndash;&gt;
-        <dependency>
-            <groupId>com.github.spullara.mustache.java</groupId>
-            <artifactId>compiler</artifactId>
-            <version>${version.mustache}</version>
-        </dependency>-->
-
         <!-- RestEasy -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
             <version>${version.resteasy}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${version.servlet-api}</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
-
-        <!-- dependency injection-->
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>${version.guice}</version>
         </dependency>
 
         <!-- Mail -->
@@ -154,7 +127,7 @@
             <version>${version.java.mail.api}</version>
         </dependency>-->
 
-        <dependency>
+        <!--<dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
             <version>${version.commons-net}</version>
@@ -193,7 +166,7 @@
             <artifactId>jsch</artifactId>
             <version>${version.jcraft}</version>
         </dependency>
-
+-->
         <!-- LOGGER -->
 
         <dependency>
@@ -236,10 +209,15 @@
         </dependency>
         <!-- End of Jackson -->
 
-        <dependency>
+        <!--<dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
             <version>${version.commons.validator}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${version.servlet-api}</version>
         </dependency>
 
         <!--Testing stuff bellow-->
@@ -278,24 +256,28 @@
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-servlet</artifactId>
             <version>${version.guice}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-multibindings</artifactId>
             <version>${version.guice}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-assistedinject</artifactId>
             <version>${version.guice}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-guice</artifactId>
             <version>${version.resteasy}</version>
+            <scope>test</scope>
         </dependency>
         <!-- End of Dependency injection -->
 
@@ -303,12 +285,14 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>${version.jetty}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
             <version>${version.jetty}</version>
+            <scope>test</scope>
         </dependency>
 
         <!--<dependency>-->
@@ -321,19 +305,17 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlets</artifactId>
             <version>${version.jetty}</version>
+            <scope>test</scope>
         </dependency>
+
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-security</artifactId>
             <version>${version.jetty}</version>
+            <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${version.servlet-api}</version>
-        </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>

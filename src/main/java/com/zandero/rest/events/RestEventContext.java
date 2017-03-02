@@ -19,13 +19,13 @@ public class RestEventContext {
 
 	public final int port;
 
-	public final String restMethod;
+	public final String method;
 
-	public final String restUrl;
+	public final String url;
 
-	public final MultivaluedMap<String, String> restQuery;
+	public final MultivaluedMap<String, String> query;
 
-	public final MultivaluedMap<String, String> restHeaders;
+	public final MultivaluedMap<String, String> headers;
 
 	public final MultivaluedMap<String, Object> responseHeaders;
 
@@ -33,7 +33,7 @@ public class RestEventContext {
 
 	public final long endTime;
 
-	public final int responseStatus;
+	public final int status;
 
 	public RestEventContext(ContainerRequestContext request,
 	                        ContainerResponseContext response,
@@ -46,14 +46,14 @@ public class RestEventContext {
 		host = request.getUriInfo().getBaseUri().getHost();
 		port = request.getUriInfo().getBaseUri().getPort();
 
-		restMethod = request.getMethod();
-		restUrl = request.getUriInfo() != null ? request.getUriInfo().getPath() : null;
+		method = request.getMethod();
+		url = request.getUriInfo() != null ? request.getUriInfo().getPath() : null;
 
-		restQuery = request.getUriInfo() != null ? request.getUriInfo().getQueryParameters() : new MultivaluedHashMap<>();
-		restHeaders = request.getHeaders();
+		query = request.getUriInfo() != null ? request.getUriInfo().getQueryParameters() : new MultivaluedHashMap<>();
+		headers = request.getHeaders();
 
 		responseHeaders = response.getHeaders();
-		responseStatus = response.getStatus();
+		status = response.getStatus();
 
 		startTime = start;
 		endTime = end;

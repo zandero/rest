@@ -1,5 +1,7 @@
 package com.zandero.rest.test;
 
+import com.zandero.rest.annotations.RestEvent;
+import com.zandero.rest.events.TestAlwaysEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,14 +31,32 @@ public class TestRestApi {
 
 	/**
 	 * Simple rest to test interface is up and running
-	 * @return 200 OK
+	 * @return 200 ping
 	 */
 	@GET
-	@Path("/info")
+	@Path("/ping")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String ping() {
 
-		return "OK";
+		return "ping";
+	}
+
+	/**
+	 * Rest that triggers an event always regardless of response code
+	 * @return 200 OK
+	 */
+	@GET
+	@Path("/always")
+	@RestEvent(description = "This event will be always be triggered, regardless of output!",
+		processor = TestAlwaysEvent.class, // trigger desired event
+		async = false // synchronous execution
+	)
+
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String always() {
+
+		return "always";
 	}
 }

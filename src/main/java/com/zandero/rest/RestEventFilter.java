@@ -112,14 +112,14 @@ public class RestEventFilter {
 
 			// trigger only successful events
 			Class<? extends RestException> ex = event.exception();
-			if ((exception == null) && ex.isInstance(NoRestException.class)) {
+			if ((exception == null) && ex.isAssignableFrom(NoRestException.class)) {
 
 				log.info("Triggering: " + event.description() + " -> " + event.processor().getName());
 
 				executeEvent(event, (Serializable) response.getEntity(), context);
 			}
 			// trigger if exception of desired type
-			else if (exception != null && !ex.isInstance(NoRestException.class)) {
+			else if (exception != null && !ex.isAssignableFrom(NoRestException.class)) {
 
 				String requestEntity = getRequestEntity(request);
 				RestExceptionJSON exceptionJSON = new RestExceptionJSON(exception, requestEntity);

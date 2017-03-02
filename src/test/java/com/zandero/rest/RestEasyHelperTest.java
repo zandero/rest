@@ -1,0 +1,56 @@
+package com.zandero.rest;
+
+import org.jboss.resteasy.core.ResourceMethodInvoker;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import javax.ws.rs.container.ContainerRequestContext;
+
+import static net.trajano.commons.testing.UtilityClassTestUtil.assertUtilityClassWellDefined;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+public class RestEasyHelperTest {
+
+	@Test
+	public void testDefinition() throws ReflectiveOperationException {
+
+		assertUtilityClassWellDefined(RestEasyHelper.class);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetMethod_Fail() throws Exception {
+
+		try {
+			RestEasyHelper.getMethod(null);
+		}
+		catch (IllegalArgumentException e) {
+			assertEquals("Missing request context!", e.getMessage());
+			throw e;
+		}
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetMethod_emptyContext() {
+
+		ContainerRequestContext context = Mockito.mock(ContainerRequestContext.class);
+
+		try {
+			RestEasyHelper.getMethod(context);
+		}
+		catch (IllegalArgumentException e) {
+			assertEquals("Missing: 'org.jboss.resteasy.core.ResourceMethodInvoker' property in request context!", e.getMessage());
+			throw e;
+		}
+	}
+
+	@Test
+	public void testGetMethod() {
+
+		ContainerRequestContext context = Mockito.mock(ContainerRequestContext.class);
+		ResourceMethodInvoker invoker = Mockito.mock(ResourceMethodInvoker.class);
+		Mockito.when(context.getProperty("org.jboss.resteasy.core.ResourceMethodInvoker")).thenReturn(invoker);
+
+		assertNull(RestEasyHelper.getMethod(context)); // method is null as it is mocked
+	}
+}

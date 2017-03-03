@@ -18,17 +18,18 @@ import java.io.Serializable;
 @NotNullAndIgnoreUnknowns
 public class RestEasyExceptionWrapper implements Serializable {
 
-	private static final Logger log = LoggerFactory.getLogger(RestEasyExceptionWrapper.class);
+	//private static final Logger log = LoggerFactory.getLogger(RestEasyExceptionWrapper.class);
 
 	private static final long serialVersionUID = -1955844752879747204L;
-
-	private Exception original;
 
 	public int code;
 
 	public String message;
 
 	public String cause;
+
+	@JsonIgnore
+	private Exception original;
 
 	@JsonIgnore
 	public Exception getOriginal() {
@@ -71,9 +72,18 @@ public class RestEasyExceptionWrapper implements Serializable {
 		original = exception;
 		cause = null;
 
-		log.error(message, exception);
+		//log.error(message, exception);
 	}
 
+	public RestEasyExceptionWrapper(RestException exception, String requestEntity) {
+
+		code = exception.getResponse() != null ? exception.getResponse().getStatus() : 0;
+		message = exception.getMessage();
+		original = exception;
+		cause = requestEntity;
+	}
+
+	@JsonIgnore
 	@Override
 	public String toString() {
 
@@ -82,7 +92,7 @@ public class RestEasyExceptionWrapper implements Serializable {
 		}
 		catch (IOException e) {
 			// should not happen
-			log.error("Unexpected error", e);
+			//log.error("Unexpected error", e);
 			return "Error parsing the error!";
 		}
 	}

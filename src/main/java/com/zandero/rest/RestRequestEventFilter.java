@@ -6,16 +6,12 @@ import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
 @Provider
-public class RestRequestEventFilter extends RestEventFilter implements ContainerRequestFilter {
-/*
-	@Inject
-	ThreadPoolService threads;*/
+public class RestRequestEventFilter implements ContainerRequestFilter {
 
 	@Override
 	public void filter(ContainerRequestContext containerRequestContext) throws IOException {
 
-		super.filter(containerRequestContext, null);
-
-		//super.setThreadPool(threads);
+		// set request start time property (for logging purposes)
+		containerRequestContext.setProperty(RestEventFilter.REQUEST_START, System.currentTimeMillis());
 	}
 }

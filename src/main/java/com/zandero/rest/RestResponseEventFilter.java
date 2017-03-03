@@ -11,13 +11,7 @@ import javax.ws.rs.ext.Provider;
  * Must be bind via Guice to be effective
  */
 @Provider
-@Singleton
 public class RestResponseEventFilter extends RestEventFilter implements ContainerResponseFilter {
-/*
-
-	@Inject
-	ThreadPoolService threads;
-*/
 
 	/**
 	 * Is fired in case REST has RestEvent or RestEvents annotation present
@@ -28,8 +22,8 @@ public class RestResponseEventFilter extends RestEventFilter implements Containe
 	@Override
 	public void filter(ContainerRequestContext requestContext, ContainerResponseContext containerResponseContext) {
 
+		// set request end time property (for logging purposes)
+		requestContext.setProperty(REQUEST_END, System.currentTimeMillis());
 		super.filter(requestContext, containerResponseContext);
-
-//		super.setThreadPool(threads);
 	}
 }

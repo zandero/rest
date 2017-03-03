@@ -1,5 +1,6 @@
 package com.zandero.rest.events;
 
+import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 public class RestEventResult {
 
 	public final boolean error;
+
 	public final String message;
 
 	public RestEventResult() {
@@ -28,12 +30,22 @@ public class RestEventResult {
 		message = errorMessage;
 	}
 
-	/* static builder for easy usage */
+	/**
+	 * static builder for easy usage
+	 *
+	 * @return OK (no massage)
+	 */
 	public static RestEventResult ok() {
 
 		return new RestEventResult();
 	}
 
+	/**
+	 * Static builder for easy use
+	 *
+	 * @param error message
+	 * @return failure with message
+	 */
 	public static RestEventResult fail(String error) {
 
 		return new RestEventResult(error);
@@ -41,11 +53,14 @@ public class RestEventResult {
 
 	/**
 	 * Checks if given object (entity) is of correct class type
-	 * @param entity to check
+	 *
+	 * @param entity   to check
 	 * @param expected list of expected types or null if none expected
 	 * @return ok or fail
 	 */
 	public static RestEventResult checkEntityType(Serializable entity, Class... expected) {
+
+		Assert.isTrue(expected != null && expected.length > 0, "Missing expected entity types!");
 
 		if (entity == null && expected != null) {
 			return fail("Invalid trigger of event. Missing entity (null), expected: " + StringUtils.join(expected, ", "));

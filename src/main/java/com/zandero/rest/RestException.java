@@ -1,5 +1,6 @@
 package com.zandero.rest;
 
+import com.zandero.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,56 +28,17 @@ public class RestException extends Exception implements Serializable {
 		statusCode = httpStatusCode;
 	}
 
-	public RestException(int httpStatusCode, String message, Throwable cause) {
-
-		super(message, cause);
-		statusCode = httpStatusCode;
-	}
-
 	/**
-	 * Produces response for Servlet use
-	 * @param response HTTP Servlet Response
-	 * @return error response
-	 */
-	public HttpServletResponse getResponse(HttpServletResponse response) {
-
-		response.setStatus(statusCode);
-		try {
-			response.getWriter().write(getMessage());
-			response.getWriter().close();
-		}
-		catch (IOException e) {
-			log.error("Could not write message to response: " + e.getMessage(), e);
-		}
-
-		return response;
-	}
-
-	/**
-	 * exception status code to be used with REST easy response
-	 * @return HTTP status code
-	 */
-	public int getStatusCode() {
-		return statusCode;
-	}
-
-	/**
-	 * Produces response for RestEasy
-	 * @param wrapper entity to be returned ... exception wrapper
-	 * @return Rest easy JSON formatted response
-	 */
-	public Response getResponse(Object wrapper) {
-
-		return Response.status(statusCode).entity(wrapper).type(MediaType.APPLICATION_JSON_TYPE).build();
-	}
-
-	/**
-	 * Produces response for RestEasy
-	 * should call getResponse with desired exception wrapper
+	 * Produces JSON wrapped exception response for RestEasy
 	 * @return Rest easy exception as JSON formatted response
 	 */
 	public Response getResponse() {
 
-		return Response.status(statusCode).entity(new CodeScoreExceptionWrapper(this)).type(MediaType.APPLICATION_JSON_TYPE).build();
+		RestEasyExceptionWrapper wrapped = new RestEasyExceptionWrapper(statusCode, getMessage(), this);
+
+		return Response.status(statusCode)
+			.entity(wrapped)
+			.type(MediaType.APPLICATION_JSON_TYPE)
+			.build();
 	}
 }

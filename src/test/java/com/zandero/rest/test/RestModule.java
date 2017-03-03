@@ -1,27 +1,18 @@
 package com.zandero.rest.test;
 
-import com.google.inject.AbstractModule;
-import com.zandero.rest.RestExceptionMapper;
-import com.zandero.rest.RestRequestEventFilter;
-import com.zandero.rest.RestResponseEventFilter;
+import com.zandero.rest.guice.RestFilterModule;
 
 /**
- *
+ * Extend upon filter module and add some test REST API
  */
-public class RestModule extends AbstractModule {
+public class RestModule extends RestFilterModule {
 
 	@Override
 	protected void configure() {
 
-		//requestStaticInjection(GuiceStaticInjected.class);
+		super.configure();
 
-		// exception handling
-		bind(RestExceptionMapper.class);
-
-		// events
-		bind(RestRequestEventFilter.class);
-		bind(RestResponseEventFilter.class);
-
+		// testing REST
 		bind(TestRestApi.class);
 	}
 }

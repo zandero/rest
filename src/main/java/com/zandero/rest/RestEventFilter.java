@@ -4,75 +4,64 @@ import com.zandero.rest.annotations.RestEvent;
 import com.zandero.rest.annotations.RestEvents;
 import com.zandero.rest.events.RestEventContext;
 import com.zandero.rest.events.RestEventProcessor;
-import com.zandero.rest.events.RestExceptionJSON;
+import com.zandero.rest.events.RestEventResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Context;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 
+/**
+ * RestEasy filter inspecting all requests and triggering event if necessary
+ */
 public class RestEventFilter {
 
 	private static final Logger log = LoggerFactory.getLogger(RestEventFilter.class);
 
-	private static final String REQUEST_START = "X_RequestEventFilter_StartTime";
+	static final String REQUEST_START = "X_RequestEventFilter_StartTime";
 
-	private static final String REQUEST_END = "X_RequestEventFilter_EndTime";
-
-	//private ThreadPoolService threads = null;
+	static final String REQUEST_END = "X_RequestEventFilter_EndTime";
 
 	/**
-	 * Setter for thread pool service
-	 *
-	 * @param threadPool service
-	 *//*
-	public void setThreadPool(ThreadPoolService threadPool) {
+	 * Used thread pool to execute async tasks
+	 * in order to used thread pool must be bound otherwise event will be executed synchronously
+	 */
+	@Inject
+	private RestEventThreadPoolImpl threadPool = null;
 
-		threads = threadPool;
-	}*/
+	/**
+	 * Gets resource method to extract event annotations from
+	 */
+	@Context
+	private ResourceInfo resourceInfo;
+
+	/**
+	 * is triggered on every request and every response call in case filter is set in place
+	 *
+	 * @param requestContext  RestEasy request wrapper
+	 * @param responseContext RestEasy response wrapper
+	 */
 	public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
 
-		if (RestEasyHelper.hasMethod(requestContext)) {
+		if (responseContext != null &&
+			resourceInfo != null &&
+			resourceInfo.getResourceMethod() != null) //&& RestEasyHelper.hasMethod(requestContext))
+		{
 
-			if (responseContext == null) // request
-			{
-				requestContext.setProperty(REQUEST_START, System.currentTimeMillis());
-				return; // nothing to do ... waiting for response
-			}
-			else {
-				requestContext.setProperty(REQUEST_END, System.currentTimeMillis());
-			}
-
-			Method method = RestEasyHelper.getMethod(requestContext);
-
-			// check if request is marked as with events to trigger
-			if (method.isAnnotationPresent(RestEvent.class) || method.isAnnotationPresent(RestEvents.class)) {
-
-				for (Annotation annotation : method.getAnnotations()) {
-
-					if (RestEasyHelper.isAnnotation(annotation, RestEvent.class)) {   // trigger event
-
-						RestEvent event = (RestEvent) annotation;
-						trigger(event, requestContext, responseContext);
-					}
-
-					if (RestEasyHelper.isAnnotation(annotation, RestEvents.class)) {
-
-						RestEvents events = (RestEvents) annotation;
-						for (int i = 0; i < events.value().length; i++) {
-
-							// trigger events ....
-							RestEvent event = events.value()[i];
-							trigger(event, requestContext, responseContext);
-						}
-					}
-				}
+			List<RestEvent> events = RestEasyHelper.getEvents(resourceInfo.getResourceMethod());
+			for (RestEvent event: events) {
+				trigger(event, requestContext, responseContext);
 			}
 		}
 	}
@@ -108,11 +97,13 @@ public class RestEventFilter {
 				startTime,
 				endTime);
 
-			log.info("Request start: " + startTime + ", end: " + endTime + ", delta: " + (endTime - startTime));
+			if (startTime != 0) { // it might be that request filter is not bound
+				log.info("Request start: " + startTime + ", end: " + endTime + ", delta: " + (endTime - startTime));
+			}
 
-			// trigger only successful events
+			// trigger only successful events - no exception ...
 			Class<? extends RestException> ex = event.exception();
-			if ((exception == null) && ex.isAssignableFrom(NoRestException.class)) {
+			if (exception == null && ex.isAssignableFrom(NoRestException.class)) {
 
 				log.info("Triggering: " + event.description() + " -> " + event.processor().getName());
 
@@ -122,19 +113,20 @@ public class RestEventFilter {
 			else if (exception != null && !ex.isAssignableFrom(NoRestException.class)) {
 
 				String requestEntity = getRequestEntity(request);
-				RestExceptionJSON exceptionJSON = new RestExceptionJSON(exception, requestEntity);
+				RestEasyExceptionWrapper exceptionJSON = new RestEasyExceptionWrapper(exception, requestEntity); // exception is wrapped into a JSON object to be used in event ...
 
 				executeEvent(event, exceptionJSON, context);
 			}
 		}
 		else {
+			// no trigger
 			log.debug("Event: " + event.description() + " expects: " + event.response() + " but response code was: " + response.getStatus() + ", not triggered!");
 		}
 	}
 
 	private void executeEvent(RestEvent event, Serializable entity, RestEventContext context) {
 
-		if (event.async()) { //&& threads != null) {
+		if (event.async() && threadPool != null) {
 			log.info("Asynchronous event execution");
 			asyncTrigger(event.processor(), entity, context);
 		}
@@ -196,7 +188,11 @@ public class RestEventFilter {
 		try {
 
 			RestEventProcessor processor = eventProcessor.newInstance();
-			processor.execute(entity, context);
+			RestEventResult result = processor.execute(entity, context);
+
+			if (result.error) {
+				log.error(result.message);
+			}
 		}
 		catch (InstantiationException | IllegalAccessException e) {
 
@@ -218,9 +214,7 @@ public class RestEventFilter {
 
 		try {
 			WorkerThread worker = new WorkerThread(eventProcessor, entity, context); // create execution thread
-
-			/*ExecutorService executor = threads.getExecutor();
-			executor.execute(worker);*/
+			threadPool.getExecutor().execute(worker);
 		}
 		catch (Exception e) {
 			log.error("Rest event execution failed: ", e);
@@ -235,7 +229,7 @@ public class RestEventFilter {
 
 		private final RestEventContext context;
 
-		public WorkerThread(Class<? extends RestEventProcessor> eventProcessor, Serializable eventEntity, RestEventContext eventContext) throws Exception {
+		WorkerThread(Class<? extends RestEventProcessor> eventProcessor, Serializable eventEntity, RestEventContext eventContext) throws Exception {
 
 			try {
 
@@ -243,7 +237,7 @@ public class RestEventFilter {
 			}
 			catch (InstantiationException | IllegalAccessException e) {
 
-				log.error("Failed to instantiate processor.", e);
+				log.error("Failed to instantiate event processor.", e);
 				throw e;
 			}
 
@@ -255,12 +249,15 @@ public class RestEventFilter {
 		public void run() {
 
 			try {
-				processor.execute(entity, context);
+				RestEventResult result = processor.execute(entity, context);
+
+				if (result.error) {
+					log.error(result.message);
+				}
 			}
 			catch (Exception e) {
-				log.error("Execution failed: " + e.getMessage(), e);
+				log.error("Event execution failed: " + e.getMessage(), e);
 			}
 		}
 	}
 }
-

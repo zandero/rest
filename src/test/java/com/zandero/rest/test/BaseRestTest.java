@@ -60,6 +60,11 @@ public class BaseRestTest {
 		}
 
 		WebServer.start(); // local server instance
+
+		// clear before next run
+		lastEvent = null;
+		lastContext = null;
+		lastEntity = null;
 	}
 
 	@AfterClass

@@ -79,7 +79,7 @@ public class RestEventFilter {
 
 			// unwrap exception
 			RestException exception = null;
-			if (response.getEntity() instanceof RestException) {
+			if (response.getEntity() instanceof RestEasyExceptionWrapper) {
 
 				RestEasyExceptionWrapper wrapper = (RestEasyExceptionWrapper) response.getEntity();
 				if (wrapper.getOriginal() instanceof RestException) {

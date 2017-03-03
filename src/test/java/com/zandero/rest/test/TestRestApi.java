@@ -155,4 +155,25 @@ public class TestRestApi {
 
 		return Response.ok("exception: " + code).status(code).build();
 	}
+
+	@GET
+	@Path("/exception_type/{code}")
+	@RestEvents({
+
+		@RestEvent(description = "React on 400",
+			processor = TestExceptionEvent.class, // trigger exception event
+			exception = RestException400.class, // same as code == 400
+			async = false
+		)
+	})
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response throwExceptionForType(@PathParam("code") int code) throws RestException {
+
+		switch (code) {
+			case HttpStatus.BAD_REQUEST_400:
+				throw new RestException400();
+		}
+
+		return Response.ok("exception: " + code).status(code).build();
+	}
 }

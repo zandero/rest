@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RestEvent {
 
-	int DEFAULT_EVENT_STATUS = 0;
+	int DEFAULT_EVENT_STATUS = -1;
 
 	/**
 	 * @return description for logging and documentation purposes only
@@ -37,7 +37,7 @@ public @interface RestEvent {
 	 * exception to react upon if any
 	 * @return exception error to bind event to
 	 */
-	Class<? extends RestException> exception() default NoRestException.class; // default to a "not" exception (same as null)
+	Class<? extends Exception> exception() default NoRestException.class; // default to a "not" exception (same as null)
 
 	/**
 	 * asynchronous event execution (by default on)

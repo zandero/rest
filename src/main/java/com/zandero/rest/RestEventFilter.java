@@ -1,10 +1,10 @@
 package com.zandero.rest;
 
 import com.zandero.rest.annotations.RestEvent;
-import com.zandero.rest.annotations.RestEvents;
 import com.zandero.rest.events.RestEventContext;
 import com.zandero.rest.events.RestEventProcessor;
 import com.zandero.rest.events.RestEventResult;
+import com.zandero.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,14 +13,8 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 /**
  * RestEasy filter inspecting all requests and triggering event if necessary
@@ -60,7 +54,7 @@ public class RestEventFilter {
 		{
 
 			List<RestEvent> events = RestEasyHelper.getEvents(resourceInfo.getResourceMethod());
-			for (RestEvent event: events) {
+			for (RestEvent event : events) {
 				trigger(event, requestContext, responseContext);
 			}
 		}
@@ -73,20 +67,23 @@ public class RestEventFilter {
 			return;
 		}
 
+		// unwrap exception (if any)
+		boolean isException = false;
+		RestEasyExceptionWrapper wrapper = null;
+
+		if (response.getEntity() instanceof RestEasyExceptionWrapper) {
+
+			wrapper = (RestEasyExceptionWrapper) response.getEntity();
+
+			isException = StringUtils.equals(event.exception().getName(), wrapper.getCause()) ||
+				(wrapper.getCode() != RestEvent.DEFAULT_EVENT_STATUS && response.getStatus() == wrapper.getCode());
+		}
+
+
 		// check if response code is equal to the desired response code (or default)
 		if (event.response() == RestEvent.DEFAULT_EVENT_STATUS ||
-			event.response() == response.getStatus()) {
-
-			// unwrap exception
-			RestException exception = null;
-			if (response.getEntity() instanceof RestEasyExceptionWrapper) {
-
-				RestEasyExceptionWrapper wrapper = (RestEasyExceptionWrapper) response.getEntity();
-				if (wrapper.getOriginal() instanceof RestException) {
-
-					exception = (RestException) wrapper.getOriginal();
-				}
-			}
+			event.response() == response.getStatus() ||
+			isException) {
 
 			// calculate execution time (request -> response) delta
 			long startTime = getRequestTime(request, REQUEST_START);
@@ -101,21 +98,12 @@ public class RestEventFilter {
 				log.info("Request start: " + startTime + ", end: " + endTime + ", delta: " + (endTime - startTime));
 			}
 
-			// trigger only successful events - no exception ...
-			Class<? extends RestException> ex = event.exception();
-			if (exception == null && ex.isAssignableFrom(NoRestException.class)) {
-
-				log.info("Triggering: " + event.description() + " -> " + event.processor().getName());
-
-				executeEvent(event, (Serializable) response.getEntity(), context);
+			log.info("Triggering: " + event.description() + " -> " + event.processor().getName());
+			if (isException) {
+				executeEvent(event, wrapper, context);
 			}
-			// trigger if exception of desired type
-			else if (exception != null && !ex.isAssignableFrom(NoRestException.class)) {
-
-				String requestEntity = getRequestEntity(request);
-				RestEasyExceptionWrapper exceptionJSON = new RestEasyExceptionWrapper(exception, requestEntity); // exception is wrapped into a JSON object to be used in event ...
-
-				executeEvent(event, exceptionJSON, context);
+			else {
+				executeEvent(event, (Serializable) response.getEntity(), context);
 			}
 		}
 		else {
@@ -152,7 +140,7 @@ public class RestEventFilter {
 	 *
 	 * @param request holding data
 	 * @return request entity (JSON in most cases)
-	 */
+	 *//*
 	private String getRequestEntity(ContainerRequestContext request) {
 
 		if (request != null && request.hasEntity()) {
@@ -180,8 +168,7 @@ public class RestEventFilter {
 		}
 
 		return null;
-	}
-
+	}*/
 	private void trigger(Class<? extends RestEventProcessor> eventProcessor, Serializable entity,
 	                     RestEventContext context) {
 

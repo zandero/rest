@@ -140,8 +140,7 @@ public class TestRestApi {
 
 		@RestEvent(description = "React on 400",
 			processor = TestExceptionEvent.class, // trigger exception event
-			//exception = RestException400.class, // same as code == 400
-			response = 400,
+			response = 400, // exception is setting status 400
 			async = false
 		)
 	})
@@ -151,6 +150,9 @@ public class TestRestApi {
 		switch (code) {
 			case HttpStatus.BAD_REQUEST_400:
 				throw new RestException400();
+
+			case HttpStatus.NOT_ACCEPTABLE_406:
+				throw new IllegalArgumentException("Given code is invalid");
 		}
 
 		return Response.ok("exception: " + code).status(code).build();
@@ -164,6 +166,12 @@ public class TestRestApi {
 			processor = TestExceptionEvent.class, // trigger exception event
 			exception = RestException400.class, // same as code == 400
 			async = false
+		),
+
+		@RestEvent(description = "Illegal argument exception 406",
+			processor = TestExceptionEvent.class,
+			exception = IllegalArgumentException.class,
+			async = false
 		)
 	})
 	@Produces(MediaType.APPLICATION_JSON)
@@ -172,6 +180,12 @@ public class TestRestApi {
 		switch (code) {
 			case HttpStatus.BAD_REQUEST_400:
 				throw new RestException400();
+
+			case HttpStatus.NOT_ACCEPTABLE_406:
+				throw new IllegalArgumentException("Given code is invalid");
+
+			case HttpStatus.NOT_FOUND_404:
+				throw new NotFoundException();
 		}
 
 		return Response.ok("exception: " + code).status(code).build();

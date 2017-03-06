@@ -17,7 +17,7 @@ public class TestExceptionEvent implements RestEventProcessor {
 		if (entity instanceof RestEasyExceptionWrapper) {
 
 			RestEasyExceptionWrapper exception = (RestEasyExceptionWrapper) entity;
-			BaseRestTest.setEvent(exception.message, entity, context);
+			BaseRestTest.setEvent(exception.getMessage(), entity, context);
 		}
 
 		return RestEventResult.checkEntityType(entity, RestEasyExceptionWrapper.class);

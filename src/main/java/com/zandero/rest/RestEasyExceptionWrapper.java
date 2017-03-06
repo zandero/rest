@@ -1,7 +1,9 @@
 package com.zandero.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zandero.rest.annotations.NotNullAndIgnoreUnknowns;
+import com.zandero.utils.Assert;
 import com.zandero.utils.JsonUtils;
 import org.jboss.resteasy.spi.Failure;
 
@@ -18,69 +20,52 @@ import java.io.Serializable;
 @NotNullAndIgnoreUnknowns
 public class RestEasyExceptionWrapper implements Serializable {
 
-	//private static final Logger log = LoggerFactory.getLogger(RestEasyExceptionWrapper.class);
-
 	private static final long serialVersionUID = -1955844752879747204L;
 
-	public int code;
+	/**
+	 * HTTP status code
+	 */
+	private int code;
 
-	public String message;
+	/**
+	 * Error message
+	 */
+	private String message;
 
-	public String cause;
-
-	@JsonIgnore
-	private Exception original;
-
-	@JsonIgnore
-	public Exception getOriginal() {
-
-		return original;
-	}
+	/**
+	 * Original exception class name
+	 */
+	private String cause;
 
 	protected RestEasyExceptionWrapper() {
 		// for deserialization only
 	}
 
-	public RestEasyExceptionWrapper(Failure failure) {
+	public RestEasyExceptionWrapper(Throwable exception) {
 
-		code = failure.getErrorCode();
-		message = failure.getMessage();
-		original = failure;
-		cause = null;
-	}
+		Assert.notNull(exception, "Missing exception!");
 
-	public RestEasyExceptionWrapper(Throwable throwable) {
+		if (exception instanceof WebApplicationException) {
+			code = ((WebApplicationException)exception).getResponse().getStatus();
+		}
+		else if (exception instanceof RestException) {
+			code = ((RestException)exception).getResponse().getStatus();
+		}
+		else if (exception instanceof Failure ){
+			code = ((Failure)exception).getErrorCode();
+		}
 
-		code = 0;
-		message = throwable.getMessage();
-		original = null;
-		cause = throwable.getClass().getName();
-	}
-
-	public RestEasyExceptionWrapper(WebApplicationException e) {
-
-		code = e.getResponse().getStatus();
-		message = e.getMessage();
-		original = null;
-		cause = null;
+		message = exception.getMessage();
+		cause = exception.getClass().getName();
 	}
 
 	public RestEasyExceptionWrapper(int status, String exceptionMessage, Exception exception) {
 
+		Assert.notNull(exception, "Missing exception!");
+
 		code = status;
 		message = exceptionMessage;
-		original = exception;
-		cause = null;
-
-		//log.error(message, exception);
-	}
-
-	public RestEasyExceptionWrapper(RestException exception, String requestEntity) {
-
-		code = exception.getResponse() != null ? exception.getResponse().getStatus() : 0;
-		message = exception.getMessage();
-		original = exception;
-		cause = requestEntity;
+		cause = exception.getClass().getName();
 	}
 
 	@JsonIgnore
@@ -95,6 +80,24 @@ public class RestEasyExceptionWrapper implements Serializable {
 			//log.error("Unexpected error", e);
 			return "Error parsing the error!";
 		}
+	}
+
+	@JsonProperty("code")
+	public int getCode() {
+
+		return code;
+	}
+
+	@JsonProperty("message")
+	public String getMessage() {
+
+		return message;
+	}
+
+	@JsonIgnore
+	public String getCause() {
+
+		return cause;
 	}
 }
 

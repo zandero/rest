@@ -16,7 +16,7 @@ public class RestEasyExceptionWrapperTest {
 		RestEasyExceptionWrapper ex = new RestEasyExceptionWrapper(new IllegalArgumentException("Bad"));
 		String json = JsonUtils.toJson(ex);
 
-		assertEquals("{\"code\":0,\"message\":\"Bad\",\"cause\":\"java.lang.IllegalArgumentException\"}", json);
+		assertEquals("{\"code\":0,\"message\":\"Bad\"}", json);
 	}
 
 }

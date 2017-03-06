@@ -55,7 +55,7 @@ public class RestEventFilterTest extends BaseRestTest {
 		assertTrue(getEntity() instanceof String);
 
 		// check entity
-		String entity = (String)getEntity();
+		String entity = (String) getEntity();
 		assertEquals("always", entity);
 
 		// check context
@@ -73,6 +73,7 @@ public class RestEventFilterTest extends BaseRestTest {
 
 	/**
 	 * Triggers long running event asynchronously
+	 *
 	 * @throws InterruptedException if thread sleep is interrupted
 	 */
 	@Test
@@ -99,7 +100,7 @@ public class RestEventFilterTest extends BaseRestTest {
 		assertTrue(getEntity() instanceof String);
 
 		// check entity
-		String entity = (String)getEntity();
+		String entity = (String) getEntity();
 		assertEquals("slow", entity);
 
 		// check context
@@ -154,7 +155,7 @@ public class RestEventFilterTest extends BaseRestTest {
 		assertTrue(getEntity() instanceof String);
 
 		// check entity
-		String entity = (String)getEntity();
+		String entity = (String) getEntity();
 		assertEquals("status: 404", entity);
 
 		// check context
@@ -205,7 +206,7 @@ public class RestEventFilterTest extends BaseRestTest {
 		assertTrue(getEntity() instanceof String);
 
 		// check entity
-		String entity = (String)getEntity();
+		String entity = (String) getEntity();
 		assertEquals("multi: 404", entity);
 
 		// check context

@@ -69,13 +69,13 @@ public class RestEventFilter {
 
 		// unwrap exception (if any)
 		boolean isException = false;
-		RestEasyExceptionWrapper wrapper = null;
+		RestException wrapper = null;
 
-		if (response.getEntity() instanceof RestEasyExceptionWrapper) {
+		if (response.getEntity() instanceof RestException) {
 
-			wrapper = (RestEasyExceptionWrapper) response.getEntity();
+			wrapper = (RestException) response.getEntity();
 
-			isException = StringUtils.equals(event.exception().getName(), wrapper.getCause());
+			isException = StringUtils.equals(event.exception().getName(), wrapper.getOriginal());
 
 			// either we match the exception type OR we match the exception code OR both if not default code
 			if (RestEvent.DEFAULT_EVENT_STATUS == event.response()) {  // either one is enough

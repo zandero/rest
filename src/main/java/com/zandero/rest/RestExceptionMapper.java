@@ -21,6 +21,9 @@ public class RestExceptionMapper implements ExceptionMapper<Throwable> {
 	public Response toResponse(Throwable exception) {
 
 		try {
+			if (exception == null) { // should not happen ...
+				throw new IllegalArgumentException("Missing exception!");
+			}
 			// to avoid ugly casting, just throw exception and catch typed exception below
 			throw exception;
 		}
@@ -52,9 +55,10 @@ public class RestExceptionMapper implements ExceptionMapper<Throwable> {
 		}
 	}
 
-	Response getResponse(int status, Throwable e) {
+	private Response getResponse(int status, Throwable e) {
+
 		return Response.status(status)
-			.entity(new RestEasyExceptionWrapper(e, status))
+			.entity(new RestException(e, status))
 			.type(MediaType.APPLICATION_JSON)
 			.build();
 	}

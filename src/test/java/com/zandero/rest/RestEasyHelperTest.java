@@ -1,14 +1,8 @@
 package com.zandero.rest;
 
-import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import javax.ws.rs.container.ContainerRequestContext;
 
 import static net.trajano.commons.testing.UtilityClassTestUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class RestEasyHelperTest {
 

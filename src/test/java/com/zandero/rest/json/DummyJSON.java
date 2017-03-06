@@ -9,6 +9,7 @@ import com.zandero.rest.annotations.NotNullAndIgnoreUnknowns;
 public class DummyJSON {
 
 	public DummyJSON() {
+
 		name = "dummy";
 	}
 

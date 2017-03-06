@@ -1,7 +1,6 @@
 package com.zandero.rest.annotations;
 
 import com.zandero.rest.NoRestException;
-import com.zandero.rest.RestException;
 import com.zandero.rest.events.RestEventProcessor;
 
 import java.lang.annotation.*;

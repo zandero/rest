@@ -1,6 +1,6 @@
 package com.zandero.rest.events;
 
-import com.zandero.rest.RestEasyExceptionWrapper;
+import com.zandero.rest.RestException;
 import com.zandero.rest.test.BaseRestTest;
 
 import java.io.Serializable;
@@ -14,12 +14,12 @@ public class TestExceptionEvent implements RestEventProcessor {
 	public RestEventResult execute(Serializable entity, RestEventContext context) throws Exception {
 
 		// we are expecting an exception wrapped in JSON
-		if (entity instanceof RestEasyExceptionWrapper) {
+		if (entity instanceof RestException) {
 
-			RestEasyExceptionWrapper exception = (RestEasyExceptionWrapper) entity;
+			RestException exception = (RestException) entity;
 			BaseRestTest.setEvent(exception.getMessage(), entity, context);
 		}
 
-		return RestEventResult.checkEntityType(entity, RestEasyExceptionWrapper.class);
+		return RestEventResult.checkEntityType(entity, RestException.class);
 	}
 }

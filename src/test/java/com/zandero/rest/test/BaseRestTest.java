@@ -13,12 +13,13 @@ import java.util.List;
 /**
  * Runs local instance of Jetty to power RestEasy REST interfaces
  * in order to test REST filtering and event triggering
- *
+ * <p>
  * Rest are running on http://localhost:4444/rest/
  */
 public class BaseRestTest {
 
 	protected static final int PORT = 4444;
+
 	protected String ROOT_URL = "http://localhost:" + PORT;
 
 	/**
@@ -74,6 +75,7 @@ public class BaseRestTest {
 	}
 
 	public static void setEvent(String event, Serializable entity, RestEventContext context) {
+
 		lastEvent = event;
 		lastEntity = entity;
 		lastContext = context;

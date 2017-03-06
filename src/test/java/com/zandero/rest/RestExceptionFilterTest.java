@@ -188,4 +188,19 @@ public class RestExceptionFilterTest extends BaseRestTest {
 		String output = response.readEntity(String.class);
 		assertEquals("{\"code\":404,\"message\":\"RESTEASY003210: Could not find resource for full path: http://localhost:4444/rest/test/nonExistent\"}", output);
 	}
+
+	@Test
+	public void unauthorizedTest() {
+
+		Response response = new ResteasyClientBuilder()
+			.build()
+			.target(ROOT_URL + "/rest/test/unauthorized")
+			.request()
+			.get();
+
+		assertEquals(HttpStatus.FORBIDDEN_403, response.getStatus());
+
+		String output = response.readEntity(String.class);
+		assertEquals("{\"code\":403,\"message\":\"Stop before it is to late!\"}", output);
+	}
 }

@@ -13,10 +13,10 @@ public class RestEasyExceptionWrapperTest {
 	@Test
 	public void serializeToJsonTest() {
 
-		RestEasyExceptionWrapper ex = new RestEasyExceptionWrapper(new IllegalArgumentException("Bad"));
+		RestEasyExceptionWrapper ex = new RestEasyExceptionWrapper(new IllegalArgumentException("Bad"), 406);
 		String json = JsonUtils.toJson(ex);
 
-		assertEquals("{\"code\":0,\"message\":\"Bad\"}", json);
+		assertEquals("{\"code\":406,\"message\":\"Bad\"}", json);
 	}
 
 }

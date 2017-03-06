@@ -64,12 +64,12 @@ public class RestExceptionFilterTest extends BaseRestTest {
 		assertEquals(HttpStatus.NOT_ACCEPTABLE_406, response.getStatus());
 
 		String output = response.readEntity(String.class);
-		assertEquals("{\"code\":0,\"message\":\"Given code is invalid\"}", output);
+		assertEquals("{\"code\":406,\"message\":\"Given code is invalid\"}", output);
 
 		// check entity
 		RestEasyExceptionWrapper entity = JsonUtils.fromJson(output, RestEasyExceptionWrapper.class);
 		assertEquals("Given code is invalid", entity.getMessage());
-		assertEquals(0, entity.getCode()); // todo must be 406
+		assertEquals(406, entity.getCode()); // todo must be 406
 
 		// check context
 		assertNull(getContext());
@@ -122,12 +122,12 @@ public class RestExceptionFilterTest extends BaseRestTest {
 		assertEquals(HttpStatus.NOT_ACCEPTABLE_406, response.getStatus());
 
 		String output = response.readEntity(String.class);
-		assertEquals("{\"code\":0,\"message\":\"Given code is invalid\"}", output);
+		assertEquals("{\"code\":406,\"message\":\"Given code is invalid\"}", output);
 
 		// check entity
 		RestEasyExceptionWrapper entity = JsonUtils.fromJson(output, RestEasyExceptionWrapper.class);
 		assertEquals("Given code is invalid", entity.getMessage());
-		assertEquals(0, entity.getCode()); // todo must be 406
+		assertEquals(406, entity.getCode());
 
 		// check context
 		assertNotNull(getContext());

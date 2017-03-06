@@ -41,7 +41,7 @@ public class RestEasyExceptionWrapper implements Serializable {
 		// for deserialization only
 	}
 
-	public RestEasyExceptionWrapper(Throwable exception) {
+	public RestEasyExceptionWrapper(Throwable exception, int defaultStatus) {
 
 		Assert.notNull(exception, "Missing exception!");
 
@@ -53,6 +53,9 @@ public class RestEasyExceptionWrapper implements Serializable {
 		}
 		else if (exception instanceof Failure ){
 			code = ((Failure)exception).getErrorCode();
+		}
+		else { // default
+			code = defaultStatus;
 		}
 
 		message = exception.getMessage();

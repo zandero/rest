@@ -75,13 +75,22 @@ public class RestEventFilter {
 
 			wrapper = (RestEasyExceptionWrapper) response.getEntity();
 
-			isException = StringUtils.equals(event.exception().getName(), wrapper.getCause()) ||
-				(wrapper.getCode() != RestEvent.DEFAULT_EVENT_STATUS && response.getStatus() == wrapper.getCode());
+			isException = StringUtils.equals(event.exception().getName(), wrapper.getCause());
+
+			// either we match the exception type OR we match the exception code OR both if not default code
+			if (RestEvent.DEFAULT_EVENT_STATUS == event.response()) {  // either one is enough
+				isException = isException ||
+							  response.getStatus() == wrapper.getCode();
+			}
+			else {
+				// we must match code and exception
+				isException = isException &&
+					          response.getStatus() == wrapper.getCode();
+			}
 		}
 
-
 		// check if response code is equal to the desired response code (or default)
-		if (event.response() == RestEvent.DEFAULT_EVENT_STATUS ||
+		if (event.response() == RestEvent.DEFAULT_EVENT_STATUS || // ALWAYS trigger
 			event.response() == response.getStatus() ||
 			isException) {
 
@@ -135,40 +144,6 @@ public class RestEventFilter {
 		return 0;
 	}
 
-	/**
-	 * Gets original JSON send as request before failure
-	 *
-	 * @param request holding data
-	 * @return request entity (JSON in most cases)
-	 *//*
-	private String getRequestEntity(ContainerRequestContext request) {
-
-		if (request != null && request.hasEntity()) {
-
-			String requestEntity;
-
-			try {
-				InputStreamReader reader = new InputStreamReader(request.getEntityStream());
-				BufferedReader bf = new BufferedReader(reader);
-
-				requestEntity = "";
-				String line;
-				while ((line = bf.readLine()) != null) {
-
-					requestEntity += line;
-				}
-			}
-			catch (IOException e) {
-
-				e.printStackTrace();
-				requestEntity = null;
-			}
-
-			return requestEntity;
-		}
-
-		return null;
-	}*/
 	private void trigger(Class<? extends RestEventProcessor> eventProcessor, Serializable entity,
 	                     RestEventContext context) {
 

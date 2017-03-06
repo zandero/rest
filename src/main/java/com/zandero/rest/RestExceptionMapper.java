@@ -54,7 +54,7 @@ public class RestExceptionMapper implements ExceptionMapper<Throwable> {
 
 	Response getResponse(int status, Throwable e) {
 		return Response.status(status)
-			.entity(new RestEasyExceptionWrapper(e))
+			.entity(new RestEasyExceptionWrapper(e, status))
 			.type(MediaType.APPLICATION_JSON)
 			.build();
 	}

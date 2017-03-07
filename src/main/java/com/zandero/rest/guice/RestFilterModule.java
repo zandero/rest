@@ -12,7 +12,7 @@ import com.zandero.rest.events.RestEventProcessor;
  * Basic RestFilter module to include in project
  * or bind manually as desired
  */
-public class BaseFilterModule extends AbstractModule {
+public class RestFilterModule extends AbstractModule {
 
 	private static Multibinder<RestEventProcessor> eventProcessors;
 

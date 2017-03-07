@@ -6,7 +6,7 @@ import com.zandero.rest.RestEventThreadPoolImpl;
 /**
  * Extension of Basic filter module with thread pool for async
  */
-public class DefaultFilterModule extends BaseFilterModule {
+public class AsyncRestFilterModule extends RestFilterModule {
 
 	@Override
 	protected void configure() {

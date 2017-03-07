@@ -16,5 +16,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RestEvents {
 
+	/**
+	 * Array of events to be triggered
+	 * @return array of RestEvents
+	 */
 	RestEvent[] value() default {};
 }

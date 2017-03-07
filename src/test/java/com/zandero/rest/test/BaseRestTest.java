@@ -37,7 +37,7 @@ public class BaseRestTest {
 	 */
 	private static RestEventContext lastContext;
 
-	private List<AbstractModule> testModules;
+	protected List<AbstractModule> testModules;
 
 	public BaseRestTest() {
 

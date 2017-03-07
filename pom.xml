@@ -208,6 +208,11 @@
             <version>${version.jetty}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+            <version>4.1.0</version>
+        </dependency>
 
     </dependencies>
 

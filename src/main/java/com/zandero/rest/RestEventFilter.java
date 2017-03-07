@@ -15,6 +15,7 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * RestEasy filter inspecting all requests and triggering event if necessary
@@ -39,6 +40,12 @@ public class RestEventFilter {
 	 */
 	@Context
 	private ResourceInfo resourceInfo;
+
+	/**
+	 * List of processors in case they need Guice injections
+	 */
+	@Inject
+	private Set<RestEventProcessor> processors;
 
 	/**
 	 * is triggered on every request and every response call in case filter is set in place
@@ -80,12 +87,12 @@ public class RestEventFilter {
 			// either we match the exception type OR we match the exception code OR both if not default code
 			if (RestEvent.DEFAULT_EVENT_STATUS == event.response()) {  // either one is enough
 				isException = isException ||
-							  response.getStatus() == wrapper.getCode();
+					response.getStatus() == wrapper.getCode();
 			}
 			else {
 				// we must match code and exception
 				isException = isException &&
-					          response.getStatus() == wrapper.getCode();
+					response.getStatus() == wrapper.getCode();
 			}
 		}
 
@@ -144,21 +151,42 @@ public class RestEventFilter {
 		return 0;
 	}
 
-	private void trigger(Class<? extends RestEventProcessor> eventProcessor, Serializable entity,
-	                     RestEventContext context) {
+	private RestEventProcessor getProcessor(Class<? extends RestEventProcessor> eventProcessor) {
 
 		try {
 
-			RestEventProcessor processor = eventProcessor.newInstance();
-			RestEventResult result = processor.execute(entity, context);
-
-			if (result.error) {
-				log.error(result.message);
+			// check if event is in list of Guice events
+			for (RestEventProcessor processor: processors) {
+				if (eventProcessor.isInstance(processor)) {
+					return processor;
+				}
 			}
+
+			return eventProcessor.newInstance();
 		}
 		catch (InstantiationException | IllegalAccessException e) {
 
 			log.error("Failed to instantiate processor. ", e);
+		}
+
+		return null;
+	}
+
+
+	private void trigger(Class<? extends RestEventProcessor> eventProcessor, Serializable entity,
+	                     RestEventContext context) {
+
+		RestEventProcessor processor = getProcessor(eventProcessor);
+		if (processor == null) {
+			log.error("Can't initialize: " + eventProcessor.getName());
+			return;
+		}
+
+		try {
+			RestEventResult result = processor.execute(entity, context);
+			if (result != null && result.error) {
+				log.error(result.message);
+			}
 		}
 		catch (Exception e) {
 			log.error("Failed to execute task: ", e);
@@ -193,14 +221,9 @@ public class RestEventFilter {
 
 		WorkerThread(Class<? extends RestEventProcessor> eventProcessor, Serializable eventEntity, RestEventContext eventContext) throws Exception {
 
-			try {
-
-				processor = eventProcessor.newInstance();
-			}
-			catch (InstantiationException | IllegalAccessException e) {
-
-				log.error("Failed to instantiate event processor.", e);
-				throw e;
+			processor = getProcessor(eventProcessor);
+			if (processor == null) {
+				log.error("Can't initialize: " + eventProcessor.getName());
 			}
 
 			entity = eventEntity;
@@ -210,15 +233,18 @@ public class RestEventFilter {
 		@Override
 		public void run() {
 
-			try {
-				RestEventResult result = processor.execute(entity, context);
+			if (processor != null) {
 
-				if (result.error) {
-					log.error(result.message);
+				try {
+					RestEventResult result = processor.execute(entity, context);
+
+					if (result != null && result.error) {
+						log.error(result.message);
+					}
 				}
-			}
-			catch (Exception e) {
-				log.error("Event execution failed: " + e.getMessage(), e);
+				catch (Exception e) {
+					log.error("Event execution failed: " + e.getMessage(), e);
+				}
 			}
 		}
 	}

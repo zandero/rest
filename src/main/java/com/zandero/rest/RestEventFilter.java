@@ -1,5 +1,6 @@
 package com.zandero.rest;
 
+import com.google.inject.Inject;
 import com.zandero.rest.annotations.RestEvent;
 import com.zandero.rest.events.RestEventContext;
 import com.zandero.rest.events.RestEventProcessor;
@@ -8,7 +9,6 @@ import com.zandero.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ResourceInfo;
@@ -43,8 +43,12 @@ public class RestEventFilter {
 
 	/**
 	 * List of processors in case they need Guice injections
+	 * Event should be bound with:
+	 * <p>
+	 * Multibinder processors = Multibinder.newSetBinder(binder(), RestEventProcessor.class);
+	 * processors.addBinding().to(eventProcessor);
 	 */
-	@Inject
+	@Inject(optional = true)
 	private Set<RestEventProcessor> processors;
 
 	/**
@@ -156,9 +160,11 @@ public class RestEventFilter {
 		try {
 
 			// check if event is in list of Guice events
-			for (RestEventProcessor processor: processors) {
-				if (eventProcessor.isInstance(processor)) {
-					return processor;
+			if (processors != null) {
+				for (RestEventProcessor processor : processors) {
+					if (eventProcessor.isInstance(processor)) {
+						return processor;
+					}
 				}
 			}
 

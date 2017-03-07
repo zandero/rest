@@ -1,6 +1,7 @@
 package com.zandero.rest.guice;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Binder;
 import com.google.inject.multibindings.Multibinder;
 import com.zandero.rest.*;
 import com.zandero.rest.events.RestEventProcessor;
@@ -27,16 +28,19 @@ public class RestFilterModule extends AbstractModule {
 
 		// response filter
 		bind(RestResponseEventFilter.class); // mandatory for event filtering
-
-		// multibinder holding all dependency injected events
-		eventProcessors = Multibinder.newSetBinder(binder(), RestEventProcessor.class); // for event "storage"
 	}
 
 	/**
 	 * Add new event processor to set of processors
+	 * @param binder
 	 * @param processor to be added
 	 */
-	public static void addRestEvent(Class<? extends RestEventProcessor> processor) {
+	public static void addRestEvent(Binder binder, Class<? extends RestEventProcessor> processor) {
+
+		// multibinder holding all dependency injected events
+		if (eventProcessors == null) {
+			eventProcessors = Multibinder.newSetBinder(binder, RestEventProcessor.class); // for event "storage"
+		}
 
 		eventProcessors.addBinding().to(processor);
 	}

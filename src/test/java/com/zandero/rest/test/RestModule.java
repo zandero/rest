@@ -17,10 +17,5 @@ public class RestModule extends RestFilterModule {
 
 		// testing REST
 		bind(TestRestApi.class);
-		bind(TestGuiceRestApi.class);
-
-		// Add Guice dependant events and services
-		bind(TestService.class).to(TestServiceImpl.class);
-		addRestEvent(SimpleGuiceEvent.class);
 	}
 }

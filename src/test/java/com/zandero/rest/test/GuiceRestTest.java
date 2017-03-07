@@ -12,6 +12,6 @@ public class GuiceRestTest extends BaseRestTest {
 		super();
 
 		// add Guice event binding ...
-
+		getModules().add(new GuiceModule());
 	}
 }

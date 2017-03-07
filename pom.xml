@@ -107,6 +107,12 @@
             <version>${version.guice}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+            <version>${version.guice}</version>
+        </dependency>
+
         <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -172,14 +178,6 @@
 
 
         <!-- Server for testing only -->
-
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-multibindings</artifactId>
-            <version>${version.guice}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-assistedinject</artifactId>
@@ -207,11 +205,6 @@
             <artifactId>jetty-servlet</artifactId>
             <version>${version.jetty}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-multibindings</artifactId>
-            <version>4.1.0</version>
         </dependency>
 
     </dependencies>

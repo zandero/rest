@@ -32,7 +32,7 @@ public class RestEventFilter {
 	 * Used thread pool to execute async tasks
 	 * in order to used thread pool must be bound otherwise event will be executed synchronously
 	 */
-	@Inject
+	@Inject(optional = true)
 	private RestEventThreadPoolImpl threadPool = null;
 
 	/**
@@ -49,7 +49,7 @@ public class RestEventFilter {
 	 * processors.addBinding().to(eventProcessor);
 	 */
 	@Inject(optional = true)
-	private Set<RestEventProcessor> processors;
+	private Set<RestEventProcessor> processors = null;
 
 	/**
 	 * is triggered on every request and every response call in case filter is set in place
@@ -61,7 +61,7 @@ public class RestEventFilter {
 
 		if (responseContext != null &&
 			resourceInfo != null &&
-			resourceInfo.getResourceMethod() != null) //&& RestEasyHelper.hasMethod(requestContext))
+			resourceInfo.getResourceMethod() != null)
 		{
 
 			List<RestEvent> events = RestEasyHelper.getEvents(resourceInfo.getResourceMethod());

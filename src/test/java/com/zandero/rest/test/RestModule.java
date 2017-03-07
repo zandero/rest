@@ -1,14 +1,11 @@
 package com.zandero.rest.test;
 
-import com.zandero.rest.guice.RestFilterModule;
-import com.zandero.rest.events.SimpleGuiceEvent;
-import com.zandero.rest.test.guice.TestService;
-import com.zandero.rest.test.guice.TestServiceImpl;
+import com.zandero.rest.guice.DefaultFilterModule;
 
 /**
  * Extend upon filter module and add some test REST API
  */
-public class RestModule extends RestFilterModule {
+public class RestModule extends DefaultFilterModule {
 
 	@Override
 	protected void configure() {

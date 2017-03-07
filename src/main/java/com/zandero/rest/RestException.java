@@ -1,18 +1,12 @@
 package com.zandero.rest;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zandero.rest.annotations.NotNullAndIgnoreUnknowns;
 import com.zandero.utils.Assert;
 import com.zandero.utils.JsonUtils;
 import org.jboss.resteasy.spi.Failure;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -75,15 +69,6 @@ public class RestException extends Exception implements Serializable {
 		code = status;
 		message = exceptionMessage;
 		original = null;
-	}
-
-	public RestException(int status, String exceptionMessage, Exception exception) {
-
-		Assert.notNull(exception, "Missing exception!");
-
-		code = status;
-		message = exceptionMessage;
-		original = exception.getClass().getName();
 	}
 
 	@JsonIgnore

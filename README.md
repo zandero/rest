@@ -2,13 +2,15 @@
 Event triggering for RestEasy
 
 * asynchronous event triggering on REST calls
+* triggering of event on specific response codes
+* exception based event triggers 
 * exception handling and wrapping to JSON response
 * supports Guice for dependency injection
  
 ## Example
 Simple event triggered on every call to **/ping**
  
- ```java
+```java
 @GET
 @Path("/ping")
 @RestEvent(processor = PingEvent.class)
@@ -28,3 +30,5 @@ public class PingEvent implements RestEventProcessor {
     }
 }
 ```
+
+[Additional info](https://github.com/zandero/rest/wiki/Home)

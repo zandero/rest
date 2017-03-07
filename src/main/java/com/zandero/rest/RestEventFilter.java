@@ -47,6 +47,9 @@ public class RestEventFilter {
 	 * <p>
 	 * Multibinder processors = Multibinder.newSetBinder(binder(), RestEventProcessor.class);
 	 * processors.addBinding().to(eventProcessor);
+	 *
+	 * alternatively use
+	 *  RestFilterModule.addRestEvent(eventProcessor);
 	 */
 	@Inject(optional = true)
 	private Set<RestEventProcessor> processors = null;

@@ -1,8 +1,8 @@
 package com.zandero.rest.test;
 
 import com.zandero.rest.annotations.RestEvent;
-import com.zandero.rest.json.DummyJSON;
 import com.zandero.rest.events.SimpleGuiceEvent;
+import com.zandero.rest.json.DummyJSON;
 import com.zandero.utils.JsonUtils;
 
 import javax.inject.Inject;

@@ -46,4 +46,14 @@ public class GuiceRestEventTest extends GuiceRestTest {
 		assertEquals("/guice/test", getContext().url);
 		assertEquals(200, getContext().status);
 	}
+
+	@Test
+	public void registerTest() {
+
+		Response response = new ResteasyClientBuilder()
+			.build()
+			.target(ROOT_URL + "/rest/guice/register/andrej@zavrsnik.si")
+			.request()
+			.get();
+	}
 }

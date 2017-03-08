@@ -1,11 +1,23 @@
-# RestEasy Events
-Event triggering for RestEasy
+# Events for RestEasy 
+Sometime we need to do a little bit more when a REST API is called, but in doing so we slow down the REST API itself.  
+Events for RestEasy is a simple library that enables triggering of custom events when a REST API is called.
 
-* asynchronous event triggering on REST calls
-* triggering of event on specific response codes
+
+Event triggering supports:
+* asynchronous event execution
+* events on specific response codes
 * exception based event triggers 
 * exception handling and wrapping to JSON response
-* supports Guice for dependency injection
+* Guice for dependency injection
+
+## Setup
+```xml
+ <dependency>      
+      <groupId>com.zandero</groupId>      
+      <artifactId>rest</artifactId>      
+      <version>1.0</version>      
+ </dependency>
+ ```
  
 ## Example
 Simple event triggered on every call to **/ping**

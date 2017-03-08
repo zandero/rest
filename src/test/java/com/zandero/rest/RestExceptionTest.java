@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class RestEasyExceptionWrapperTest {
+public class RestExceptionTest {
 
 	@Test
 	public void serializeToJsonTest() {

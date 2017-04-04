@@ -12,6 +12,7 @@ public class GuiceModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+
 		bind(TestGuiceRestApi.class);
 
 		// Add Guice dependant events and services

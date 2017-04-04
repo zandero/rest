@@ -1,7 +1,5 @@
 package com.zandero.rest.test;
 
-import java.util.ArrayList;
-
 /**
  *
  */

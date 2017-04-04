@@ -36,7 +36,7 @@ public class RestFilterModule extends AbstractModule {
 	 */
 	public static void addRestEvent(Binder binder, Class<? extends RestEventProcessor> processor) {
 
-		// multibinder holding all dependency injected events
+		// multi-binder holding all dependency injected events
 		if (eventProcessors == null) {
 			eventProcessors = Multibinder.newSetBinder(binder, RestEventProcessor.class); // for event "storage"
 		}

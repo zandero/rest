@@ -5,13 +5,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rest</artifactId>
+    <artifactId>rest.events</artifactId>
     <groupId>com.zandero</groupId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>Zandero REST</name>
-    <description>Zandero REST utilities</description>
+    <name>Zandero</name>
+    <description>REST easy events</description>
     <url>http://www.zandero.com</url>
     <inceptionYear>2017</inceptionYear>
 
@@ -25,8 +25,8 @@
 
     <scm>
         <url>https://github.com/Zandero/rest</url>
-        <connection>scm:git:git://github.com/Zandero/rest.git</connection>
-        <developerConnection>scm:git:git@github.com/Zandero/rest.git</developerConnection>
+        <connection>scm:git:git://github.com/Zandero/rest.events.git</connection>
+        <developerConnection>scm:git:git@github.com/Zandero/rest.events.git</developerConnection>
     </scm>
 
     <developers>
@@ -47,7 +47,7 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
-        <version.zandero.utils>[1.0,)</version.zandero.utils>
+        <version.zandero.utils>[1.1,)</version.zandero.utils>
 
         <!-- dependency injection -->
         <version.guice>4.1.0</version.guice> <!-- for some reason [4.1.0,) is not working -->

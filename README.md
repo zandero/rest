@@ -14,7 +14,7 @@ Event triggering supports:
 ```xml
  <dependency>      
       <groupId>com.zandero</groupId>      
-      <artifactId>rest</artifactId>      
+      <artifactId>rest.events</artifactId>      
       <version>1.0</version>      
  </dependency>
  ```

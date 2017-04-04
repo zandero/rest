@@ -3,7 +3,7 @@
 
     <contextName>test</contextName>
 
-    <property name="layout" value="[%d{ISO8601}] [%thread] %-5level %logger{36} - %msg%n MDC:[%X]%n" />
+    <property name="layout" value="[%d{ISO8601}] [%thread] %-5level %logger{36} - %msg%n" />
     <property name="logdir" value="/log" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

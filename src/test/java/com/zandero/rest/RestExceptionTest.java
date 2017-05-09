@@ -1,6 +1,6 @@
 package com.zandero.rest;
 
-import com.zandero.utils.JsonUtils;
+import com.zandero.utils.extra.JsonUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

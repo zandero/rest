@@ -3,7 +3,7 @@ package com.zandero.rest.test;
 import com.zandero.rest.annotations.RestEvent;
 import com.zandero.rest.events.SimpleGuiceEvent;
 import com.zandero.rest.json.DummyJSON;
-import com.zandero.utils.JsonUtils;
+import com.zandero.utils.extra.JsonUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

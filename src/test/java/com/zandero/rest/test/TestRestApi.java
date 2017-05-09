@@ -9,7 +9,7 @@ import com.zandero.rest.events.TestExceptionEvent;
 import com.zandero.rest.events.TestSlowEvent;
 import com.zandero.rest.exceptions.RestException400;
 import com.zandero.rest.json.DummyJSON;
-import com.zandero.utils.JsonUtils;
+import com.zandero.utils.extra.JsonUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
-import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 

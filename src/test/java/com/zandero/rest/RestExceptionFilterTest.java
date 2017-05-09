@@ -2,7 +2,7 @@ package com.zandero.rest;
 
 import com.zandero.rest.exceptions.RestException400;
 import com.zandero.rest.test.BaseRestTest;
-import com.zandero.utils.JsonUtils;
+import com.zandero.utils.extra.JsonUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.junit.Test;

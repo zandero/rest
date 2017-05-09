@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zandero.rest.annotations.NotNullAndIgnoreUnknowns;
 import com.zandero.utils.Assert;
-import com.zandero.utils.JsonUtils;
+import com.zandero.utils.extra.JsonUtils;
 import org.jboss.resteasy.spi.Failure;
 
 import javax.ws.rs.WebApplicationException;

@@ -1,7 +1,7 @@
 package com.zandero.rest.events;
 
 import com.zandero.utils.Assert;
-import com.zandero.utils.UrlUtils;
+import com.zandero.utils.extra.UrlUtils;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;

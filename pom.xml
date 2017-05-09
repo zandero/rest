@@ -7,7 +7,7 @@
 
     <artifactId>rest.events</artifactId>
     <groupId>com.zandero</groupId>
-    <version>1.0</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>Zandero</name>
@@ -47,7 +47,7 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
-        <version.zandero.utils>[1.1,)</version.zandero.utils>
+        <version.zandero.utils>[1.2,)</version.zandero.utils>
 
         <!-- dependency injection -->
         <version.guice>4.1.0</version.guice> <!-- for some reason [4.1.0,) is not working -->
@@ -74,6 +74,12 @@
         <dependency>
             <groupId>com.zandero</groupId>
             <artifactId>utils</artifactId>
+            <version>${version.zandero.utils}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zandero</groupId>
+            <artifactId>utils.extra</artifactId>
             <version>${version.zandero.utils}</version>
         </dependency>
 

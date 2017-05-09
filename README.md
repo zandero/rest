@@ -15,7 +15,7 @@ Event triggering supports:
  <dependency>      
       <groupId>com.zandero</groupId>      
       <artifactId>rest.events</artifactId>      
-      <version>1.0</version>      
+      <version>1.2</version>      
  </dependency>
  ```
  
